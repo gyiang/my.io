@@ -1,0 +1,32 @@
+permalink: /:year/:month/:day/:title.html
+markdown: kramdown
+highlighter: pygments
+
+kramdown:
+  input: GFM
+
+
+author: 
+  name: Yiang Gan
+  email: ganyiang@outlook.com
+  link: http://jekyll-my.coding.io
+  github: http://github.com/gyiang
+  coding: https://coding.net/parallel
+
+title: yiang的博客 
+description: Yiang Gan的博客
+url: http://gyiang.coding.io
+rss_url: /pages/atom.xml
+
+# avatar头像及Favicon
+avatar: http://7xr422.com1.z0.glb.clouddn.com/my-avatar.jpg?imageView2/2/w/203/h/203
+#favicon: http://7u2ho6.com1.z0.glb.clouddn.com/site-favicon.ico
+
+# google analytics 设置
+#ga:
+#  id: UA-54767140-1
+#  url: coding.net
+
+# disqus 设置
+disqus:
+  shortname: disqusya
