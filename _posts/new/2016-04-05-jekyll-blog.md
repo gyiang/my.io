@@ -80,9 +80,13 @@ jekyll serve
 
 ![jekyll-push-env](http://7xr422.com1.z0.glb.clouddn.com/jekyll-push-env.png)
 
-2.点击设置，webhook，设置 url 为 "应用地址/\_"，token 设为第2步的 WEBHOOK_TOKEN 值
+2.点击设置，webhook，设置 url 为 "演示地址/\_"，token 设为第2步的 WEBHOOK_TOKEN 值
 
-![jekyll-push-webhook](http://7xr422.com1.z0.glb.clouddn.com/jekyll-push-webhook.png)
+![jekyll-push-webhook-1](http://7xr422.com1.z0.glb.clouddn.com/jekyll-push-webhook-1.png)
+
+点击确定
+
+![jekyll-push-webhook-2](http://7xr422.com1.z0.glb.clouddn.com/jekyll-push-webhook-2.png)
 
 3.重启应用
 
