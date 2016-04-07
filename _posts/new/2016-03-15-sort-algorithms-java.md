@@ -6,7 +6,7 @@ tags: 算法
 keywords: 算法,排序,Sort,Algorithm
 ---
 
-排序算法是非常常见也非常基础的算法，以至于大部分情况下它们都被集成到了语言的辅助库中。排序算法虽然已经可以很方便的使用，但是理解排序算法可以帮助我们找到解题的方向。
+update at 15-04-07
 
 ## 1. 冒泡排序 (Bubble Sort)
 
@@ -30,6 +30,21 @@ public void bubbleSort(int[] numbers) {
 
 ## 2. 插入排序（Insertion Sort）
 
+算法描述：
+
+	given a list(l) and new a list(nl)
+	for each element originallistelemin list  l:
+		for each element newlistelemin list nl:
+			if(originallistelem < newlistelem):
+			  将originallostelem插入nl中在newlistelem之前的位置
+	        else
+			  next element
+		if originallistelem not be inserted：
+			插入nl的尾端
+		
+
+实现：
+
 {% highlight java %}
 public static List<Integer> insertSort(final List<Integer> numbers) {
     final List<Integer> sortedList = new LinkedList<Integer>();
@@ -50,6 +65,23 @@ public static List<Integer> insertSort(final List<Integer> numbers) {
 
 ## 3. 快速排序（Quick Sort）
 
+算法描述：
+
+	method quicksort(list l)
+		if l.size < 2
+	       return 1
+	  let pivot=l(0);
+	  let lower,higher=new list();
+	  for each element e in list
+		if e < pivot:
+			add e to lower
+		else
+			add e to higher
+	  let sortedlower=quicksort（lower）
+	  let sortedhigher=quicksort(higher)
+	  return sortedlower+pivot+sortedhigher 
+
+实现：
 
 {% highlight java %}
 public static List<Integer> quickSort(List<Integer> numbers) {
