@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 代码重复率检测
+title: 代码抄袭检测
 category: 技术
 tags: research,moss,jplag
 description: 代码抄袭检测
