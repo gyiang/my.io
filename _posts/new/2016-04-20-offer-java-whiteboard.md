@@ -8,6 +8,8 @@ description: java研发面试所需
 
 ---
 
+## ***update at 15/04/25*** ##
+
 ### 1 java与c/c++异同
 
 - 解释型语言，C++编译型。
@@ -228,7 +230,8 @@ final指的是**引用不可变**，指向初始时指向的那个对象，不�
 - 流的本质是数据传输，分为两类：字节流和字符流
 - 字节流（8 bit）：InputStream、OutputStream
 - 字符流（16 bit）：根据码表映射字符，一次可读多个字节，Reader和Writer，处理输入输出的时候用缓存
-- IO类设计采用Decorator装饰者模式
+- IO类设计采用De
+- ator装饰者模式
 
 ### 31 Socket
 
@@ -303,12 +306,120 @@ GC算法：
 - 内存泄漏情况:（1）堆中申请的空间没有被释放（gc可以解决）（2） 对象不再被使用，但还仍然在内存中保留着
 
 引起内存泄漏的原因：
--  静态集合类（eg.HashMap、Vector），容器为静态，生命周期与程序一致，容器中的对象在程序结束之前不能被释放
--  各种连接(eg.数据库连接，网络连接，IO)，只有显式close了才能被回收
--  监听器，释放对象的时候，没有删除对应的监视器
--  变量不合理的作用域，定义范围大于使用范围，造成内存泄漏，没有及时把对象设置为null
+
+- 静态集合类（eg.HashMap、Vector），容器为静态，生命周期与程序一致，容器中的对象在程序结束之前不能被释放
+- 各种连接(eg.数据库连接，网络连接，IO)，只有显式close了才能被回收
+- 监听器，释放对象的时候，没有删除对应的监视器
+- 变量不合理的作用域，定义范围大于使用范围，造成内存泄漏，没有及时把对象设置为null
 
 ### 38 堆和栈
 
 - 栈：**基本数据类型的变量**以及**对象的引用变量**（堆中对象内存的首地址），内存分配在栈上。变量出了作用域会自动释放，通过压栈和弹栈方式来操作完成，以栈帧为基本单位来管理程序的调用关系。栈主要用来执行程序。
 - 堆：存放运行时创建的对象，通过new方式创建，每个实例唯一对应一个堆，多线程运行在一个JVM实例上，线程之间共享堆内存（多线程在访问堆中的数据时需要对数据进行同步）。存储引用类型的变量，其内存分配在堆上或者常量池（字符串常量和基本数据类型常量）。
+
+### 39 Java Collections框架
+
+- Collection接口:List、Queue、Set、Stack
+- Set：集合，不重复。实现：TreeSet（有序）、SortedSet
+- List：有序的COllection，保存进入顺序，实现：LinkedList、ArrayList、Vector
+- Map接口：HashMap（基于散列表，采用对象HashMap）、TreeMap（基于红黑树，内部按需排列）、LinkedHashMap、WeakHashMap、IdentityHashMap
+
+
+### 40 迭代器Iterator
+
+- Iterator：遍历并选择序列中的对象，提供访问方法又不必暴露对象内部细节方法
+- 容器的iterator（）返回Iterator，通过next方法遍历
+- Iterator的hasNext方法判断是否有元素，remove删除
+- ListItrator继承自Iterator，专门针对List，可以两个方法变量List，支持元素修改
+- ConcurrentModificationException：在遍历时候，对容器做增加和删除操作或者由于多线程操作导致。在遍历的过程把要删除的对象保存到一个集合中，等遍历后用removeAll（）方法删除，或者使用iter.remove()方法
+- 多线程中，JDK1.5引入线程安全的容器，比如ConcurrentHashMap、CopyOnWriteArrayList,或者遍历时候对容器的操作放到synchroized代码块中，但是并发程序比较高时，严重影响性能
+
+### 41 ArrayList、Vector、LinkedList
+
+- java.util包中
+- ArrayList、Vector基于存储元素的Object[] array，连续空间存储，有初始化容量，自动扩充，Vector默认扩充2倍（扩充空间可设置），ArrayList默认扩充1.5倍（不可设）
+- ArrayList线程不安全，Vector线程安全（性能差）
+- LinkedList双向链表，对数据的索引从列表头开始遍历，随机访问效率低插入效率高，**非安全**
+
+
+### 42 HashMap、HashTable、TreeMap、WeakHashMap
+
+- Map的接口实现（java.util.Map）
+- HashTable和HashMap的hash/rehash算法几乎一样，性能差异不大
+- HashMap是HashTbale的轻量级实现（非线程安全），HashMap运行null的键
+- HashMap不使用contans方法，使用containsValue和containsKey
+- HashTable继承自Dictionary类，HashMap是Map接口实现
+- HashTable方法线程安全，HashMap不支持线程同步（在多线程时候，额外同步机制）
+- HashTable使用Enumeration、HashMap使用Iterator
+- HashTbal的hash数组默认11（old*2+1）、HashMap默认16（一定是2的指数）
+- hash值的使用不同，HashTable直接使用对象的hashCode
+- TreeMap实现的SortMap接口，能够保存记录根据键排序，取出来的是排序后的键值对
+- LinkedHashMap是HashMap的子类。输出顺序和输入顺序相同，可以按读取顺序来排列
+- WeakHashMap与HashMap类似，键是“弱引用”，当key不再被外部引用，GC可以回收。（HashMap需要key删除）
+- HashMap可以荣光Map m=Collections.syschronizedMap(new HashMap())方式达到同步（在一个时间点只能有一个线程可以修改hash表）效果，该方法返回一个同步的Map，该Map封装了底层的HashMap的所有方法，使得底层的HashMap即使是多线程的环境也是安全的。
+- HashMap中，添加key时候，先调用key的hashCode方法生成一个hash值h1，如果h1在HashMap中已经存在，找出所有key，然后equals()方法返回true，说明已经存在，那么HashMap会使用新的value值覆盖旧的value，返回false说明不存在key，创建映射关系。HashMap采用链地址法纪解决冲突。
+- 使用自定义HashMap的key时候，要重写hashCode方法和equals方法
+
+### 43 多线程
+
+- 进程：一段正在执行的程序，在操作系统级别上的单位
+- 线程：程序执行过程中，能够执行程序代码的一个执行单元，轻量级进程。各个线程之间共享程序的内存空间（代码段、数据段和堆空间）以及一些进程级的资源（打开的文件），各个线程拥有自己的栈空间。线程的创建和切换开销更小，数据共享方面效率高，提高CPu的利用率，简化程序的结构
+- （在java中）线程有4中状态：运行、就绪、挂起、结束
+
+
+### 44 同步和异步
+
+- 同步：数据共享问题（当多个线程需要访问同一个资源时），保证资源的安全（某一时刻只能被一个线程使用）。需要获得每一个对象的锁（访问互斥资源的代码块），并且在这个锁被释放之前，其他线程就不能再进入这个临界区。**Synchronized**关键字实现同步，很大的系统开销。同步：利用同步代码库，利用同步方法
+- 异步：与非阻塞类似。每个线程都包含了运行时自身所需要的数据或方法，不必关系其他线程的状态或行为
+- 举个例子：同步就是你喊我去吃饭，如果听到了，我就和你去吃饭，如果我没有听到，你就不停的喊，知道我告诉你听到了，然后一起去吃。异步就是你喊我，然后自己去吃饭，我得到消息后可能立即走，也可能等到下班次才去吃饭。
+
+### 45 Java实现多线程
+
+- 继承Thread类，重写run（）方法。Thread本质上实现了Runnable接口的一个实例，启动方式通过start（）方法，调用后，不是立即持续多线程的代码，而是该线程变为可运行态（Runnable），什么时候运行多线程代码是由操作系统决定的。
+- 实现Runnable接口，并试下该接口的run（）方法。 **Thread t=new Thread(thread implements Runnable)**，t.start();
+- 实现Callable接口，重写call（）方法，属于Executor框架中的功能类，Callable可以在任务结束后提供一个返回值（Runnable不可以），call（）方法可以抛出异常（Runnable不可以），运行Callable可以拿到一个Future对象，Future对象表示异步计算的结果，提供检查计算是否完成的方法（Future监视目标线程调用call（）方法的情况）。ExecutorService threadPool=Executors.newSingleThreadExecutor(); Future<String> future=threadPool.submit(new CallableTes()); future.get();  (public String call() throws Exception{ return "1111"})
+- 如果不需要改写Thread中的其他方法，使用Runnable接口
+- 只有通过调用线程类的start（）方法才能真正达到多线程的目的（将线程处于就绪状态）。run（）方法当普通函数调用（同步）。
+
+### 46 多线程同步的实习方法
+
+- synchronized关键字，对象锁（任何时候只允许被一个线程拥有），（获取锁-执行代码-释放锁），synchronized方法（public synchronized void mutilThreadAccess）和synchronized块（Synchronized（SyncObject））{// 访问syncObject代码}。在synchronized代码被执行期间，线程可以调用对象的wait（）方法，释放对象锁，进入等待状态，并且调用notify（）（唤醒第一个等待线程）方法或notifyAll（）方法通知正在等待的其他线程。
+- lock（JDK 5）：Lock接口，和实现类ReentranLock（重入锁）。（1）lock（）以阻塞方法获取锁（如果获得锁，立即返回，如果别的线程持有锁，当前线程等待，直到获取锁后返回）。 （2）tryLock（），以非阻塞方法获取锁（尝试获取，获得返回true）。（3）tryLock(long timeout,TimeUbit unit),如果获取锁，立即返回true，否则等待参数单元。
+（4）lockInterruptibly（），获取锁，立即返回，没有则处于休眠，直到获得锁或者当前线程被别的线程中断（interruptedException）（非lock()的阻塞方式.lock会忽略InterruptException,lock.lock()不会抛异常）。
+final Lock lock=new ReetranLock();
+public void run(){try{lock.lockInterruptibly();}catch(InterruptException e){sout("intrrupted!")}} 
+
+### 47 sleep()和wait()方法
+
+- sleep（）使线程暂停执行一段时间的方法（阻塞状态）。wait（）（Thread.wait()）会使线程进入等待状态，直到唤醒或等待超时。
+- sleep（）是Thread类的静态方法，线程用来控制自身流程的，使线程暂停执行一段时间，把执行机会给其他线程，等到计时时间一到，线程自动“唤醒”（处于可运行状态，等待CPU调度）。 wait（）方法是Object类的方法，用于线程间的通信，会使当前拥有该对象锁的进程等待，知道其他线程调用notify（）方法，也可以设置时间自动“醒”来。
+- sleep（）方法不涉及线程间的通信，不会释放锁。wait（）会释放锁，而使线程所在对象中的其他synchronized数据可被其他线程使用。.
+- wait（）必须放在同步控制方法或者同步语句块中使用，sleep任何地方（必须捕获异常，可以被Interrupt，不释放锁容易导致死锁，不推荐使用）
+
+### 48 线程终止方法
+
+- stop()和suspend()，Thread.stop（）释放所有监视资源（导致对象处于不一致状态），supend（）容易导致死锁（不会释放锁）。现在不推荐使用了
+- (1)通过对run（）方设置flag标志控制循环执行，让线程立刻run（）方法从而终止线程。  while（flag}{//...}(2)通过在run方法中捕获异常，让线程安全退出 thread.interrupt（）;
+
+### 49 synchronized和Lock
+
+- 资源同步的两种锁机制
+- synchronized使用Object对象本身的notify、wait、notfiyALl调度机制，Lock使用Condition进行线程之间的调度
+- Lock需要显示的指定开始和结束位置，synchronized是托管给JVM执行的，Lock的锁定通过代码实现，更精准的线程语义。
+- ReentrantLock（Lock实现），有锁投票、定时锁、等候和重点锁。竞争一般情况下synchronzied性能优于Reentrantlock，竞争激烈时候synchronized性能下降很快，ReentrantLock基本保持不变
+-  锁机制不同，synchronized自动解锁，lock需要在finally中释放（否则死锁）
+
+
+### 50 守护线程
+
+- 服务进程或后台线程，较低的优先级
+- 在start（）前，使用thread.setDaemon(true)方法
+- 守护线程产生的线程默认也是守护线程
+- 当程序中只有守护线程时候，JVM是可以退出的
+- 例子：GC
+
+### 51 join方法
+
+- join方法作用是让调用该方法的线程在执行完run（）的线程后，再执行join方法后面的代码，将两个线程合并，实习同步功能
+- join（2000），最多等待两秒
+ 
